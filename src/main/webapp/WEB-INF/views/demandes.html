@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Home page</title>
+<!-- Extjs import -->
+<link rel="stylesheet" type="text/css"
+	href="resources/extjs/ext-all.css" />
+<script type="text/javascript" src="resources/extjs/ext-all.js"></script>
+<!-- Our script -->
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+
+			Ext.onReady(function() {
+						Ext.QuickTips.init();
+
+						
+						
+						
+						var demandesGrid = Ext.create('Ext.grid.Panel',{
+							title:'mes demandes de congé',
+						    //store:demandesStore,
+							columns:
+								[
+								 	{text:'Date de création',dataIndex:'creationDate'},
+								 	{text:'Durée',dataIndex:'dure'},
+								 	{text:'Status',dataIndex:'status'},
+								],//columns 
+						});
+						
+						Ext.create('Ext.data.Store', {
+						    storeId:'Mes deamndes de congé',
+						    fields:['creationDate', 'dure', 'status'],
+						    proxy: {
+						        type: 'ajax',
+						        url:  [[@{/demandes}]],
+						        reader: {
+						            type: 'json',
+						            root: 'root',
+						        }
+						    }, //proxy
+						});
+
+						var demandesGrid=Ext.create('Ext.grid.Panel', {
+						    title: 'Simpsons',
+						    store: Ext.data.StoreManager.lookup('simpsonsStore'),
+						    columns: [
+						        { text: 'Date de création',  dataIndex: 'creationDate' },
+						        { text: 'Durée', dataIndex: 'dure', flex: 1 },
+						        { text: 'Status', dataIndex: 'status' }
+						    ],
+						    height: 200,
+						    width: 400,
+						    
+						});
+						
+						var formPanel = Ext.create('Ext.form.Panel', {
+							xtype : 'panel',
+							title : 'Mes demandes',
+							height : 50,
+							width : '100%',
+							layout:'anchor',
+								items : [ 
+						        {
+								xtype : 'button',
+								text:'Ajouter une demande',
+								anchor: '10% 100%'
+								},
+						     	/* {
+									xtype:'demandesGrid',
+									anchor:'50% 50%'
+						     	} */
+						     ]//items
+
+						});
+
+						formPanel.render('test');
+						demandesGrid.render('grid');
+
+					});
+
+			/*]]>*/
+		</script>
+
+
+
+		<div id="test" />
+		
+		
+		<DIV id="grid"></DIV>
+
+	</div>
+
+</body>
+</html>

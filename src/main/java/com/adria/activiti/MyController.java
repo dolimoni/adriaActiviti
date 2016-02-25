@@ -3,6 +3,8 @@ package com.adria.activiti;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,6 +20,11 @@ public class MyController {
 
     @Autowired
     private MyService myService;
+
+    @RequestMapping(value="/demandes", method= RequestMethod.GET)
+    public String startProcessInstance(HttpServletRequest request) {
+    	return "demandes";
+    }
 
     @RequestMapping(value="/process", method= RequestMethod.POST)
     public void startProcessInstance(@RequestBody StartProcessRepresentation startProcessRepresentation) {
