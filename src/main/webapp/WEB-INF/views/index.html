@@ -35,12 +35,13 @@
 								],//columns 
 						});
 						
-						Ext.create('Ext.data.Store', {
+						var demandesStore = Ext.create('Ext.data.Store', {
 						    storeId:'Mes deamndes de congé',
 						    fields:['creationDate', 'dure', 'status'],
+						    autoLoad:true,
 						    proxy: {
 						        type: 'ajax',
-						        url:  [[@{/demandes}]],
+						        url:  [[@{/getPersonDemandes}]],
 						        reader: {
 						            type: 'json',
 						            root: 'root',
@@ -49,15 +50,15 @@
 						});
 
 						var demandesGrid=Ext.create('Ext.grid.Panel', {
-						    title: 'Simpsons',
-						    store: Ext.data.StoreManager.lookup('simpsonsStore'),
+						    title: 'Informations',
+						    store: demandesStore,
 						    columns: [
-						        { text: 'Date de création',  dataIndex: 'creationDate' },
+						        { text: 'Date de création',  dataIndex: 'creationDate', flex: 1 },
 						        { text: 'Durée', dataIndex: 'dure', flex: 1 },
-						        { text: 'Status', dataIndex: 'status' }
+						        { text: 'Status', dataIndex: 'status', flex: 1 }
 						    ],
 						    height: 200,
-						    width: 400,
+						    width: 600,
 						    
 						});
 						
@@ -71,7 +72,10 @@
 						        {
 								xtype : 'button',
 								text:'Ajouter une demande',
-								anchor: '10% 100%'
+								anchor: '10% 100%',
+								handler: function() {
+									window.location= [[@{/create}]]
+						            }
 								},
 						     	/* {
 									xtype:'demandesGrid',

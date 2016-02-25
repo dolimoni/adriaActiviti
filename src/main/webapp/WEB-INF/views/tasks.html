@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Home page</title>
+<!-- Extjs import -->
+<link rel="stylesheet" type="text/css"
+	href="resources/extjs/ext-all.css" />
+<script type="text/javascript" src="resources/extjs/ext-all.js"></script>
+<!-- Our script -->
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+
+			Ext.onReady(function() {
+						Ext.QuickTips.init();
+
+						
+						
+						
+						var TasksGrid = Ext.create('Ext.grid.Panel',{
+							title:'mes taches',
+						    //store:demandesStore,
+							columns:
+								[
+								 	{text:'Demandeur',dataIndex:'firstName'},
+								 	{text:'Durée',dataIndex:'dure'},
+								 	{text:'Accepter',dataIndex:'accepte'},
+								 	{text:'Refuser',dataIndex:'deny'},
+								],//columns 
+						});
+						
+						var TasksStore = Ext.create('Ext.data.Store', {
+						    storeId:'Mes deamndes de congé',
+						    fields:['firstName', 'dure'],
+						    autoLoad:true,
+						    proxy: {
+						        type: 'ajax',
+						        url:  [[@{/getMyTasks}]],
+						        reader: {
+						            type: 'json',
+						            root: 'root',
+						        }
+						    }, //proxy
+						});
+
+						var tasksGrid=Ext.create('Ext.grid.Panel', {
+						    title: 'Informations',
+						    store: TasksStore,
+						    columns: [
+						        { text: 'Date de création',  dataIndex: 'firstName', flex: 1 },
+						        { text: 'Durée', dataIndex: 'dure', flex: 1 },
+						    ],
+						    height: 200,
+						    width: 600,
+						    
+						});
+						
+						var formPanel = Ext.create('Ext.form.Panel', {
+							xtype : 'panel',
+							title : 'Mes tâches',
+							height : 50,
+							width : '100%',
+							layout:'anchor',
+								items : [ 
+						        {
+								xtype : 'button',
+								text:'Ajouter une demande',
+								anchor: '10% 100%',
+								handler: function() {
+									window.location= [[@{/create}]]
+						            }
+								},
+						     	/* {
+									xtype:'demandesGrid',
+									anchor:'50% 50%'
+						     	} */
+						     ]//items
+
+						});
+
+						formPanel.render('test');
+						tasksGrid.render('grid');
+
+					});
+
+			/*]]>*/
+		</script>
+
+
+
+		<div id="test" />
+		
+		
+		<DIV id="grid"></DIV>
+
+	</div>
+
+</body>
+</html>

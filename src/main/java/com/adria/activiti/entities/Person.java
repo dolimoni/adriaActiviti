@@ -1,17 +1,20 @@
-package com.adria.activiti;
+package com.adria.activiti.entities;
 
  
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Person {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long id_person;
 
     private String username;
 
@@ -20,6 +23,9 @@ public class Person {
     private String lastName;
 
     private Date birthDate;
+    @ManyToOne
+	@JoinColumn(name="id_superior")
+    private Superior superior;
 
     public Person() {
     }
@@ -31,13 +37,7 @@ public class Person {
         this.birthDate = birthDate;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+   
 
     public String getUsername() {
         return username;
@@ -70,4 +70,22 @@ public class Person {
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
+
+	
+
+	public Superior getSuperior() {
+		return superior;
+	}
+
+	public void setSuperior(Superior superior) {
+		this.superior = superior;
+	}
+
+	public Long getId_person() {
+		return id_person;
+	}
+
+	public void setId_person(Long id_person) {
+		this.id_person = id_person;
+	}
 }

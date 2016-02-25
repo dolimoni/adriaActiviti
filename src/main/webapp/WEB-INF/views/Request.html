@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Home page</title>
+<!-- Extjs import -->
+<link rel="stylesheet" type="text/css"
+	href="resources/extjs/ext-all.css" />
+<script type="text/javascript" src="resources/extjs/ext-all.js"></script>
+<!-- Our script -->
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+							Ext.onReady(function() {
+						Ext.QuickTips.init();
+						
+						var panel = new Ext.Panel({
+							padding:'10 10 10 10',
+							margin:'10 10 10 10',
+							bodyStyle: 'background-color: #C5EFF7;color: #6C7A89;',
+							border:false,
+							
+						    layout: {
+						                type: 'hbox',
+						                align: 'center',
+						                pack: 'center'
+						            }, 
+						         items:[
+						        {
+						            xtype:'label',
+						            html:'Demander un congé',
+						           
+						        }
+						    ]
+						});
+							
+							/* 
+							Signing panel 
+							 */
+							var auth = Ext.create('Ext.form.Panel', {
+								extend : 'Ext.form.Panel',
+								alias : 'widget.authBox',
+								width : 500,
+								bodyStyle: 'background-color: #C5EFF7;',
+								bodyPadding : 5,
+								fieldDefaults : {
+									msgTarget : 'side',
+									labelWidth : 75
+								},
+								defaultType : 'textfield',
+								//url : 'authenticate.form',
+								items : [ {
+									 xtype : panel,
+									 
+								},	          
+								          {
+									fieldLabel : '<span style="color: rgb(255, 255, 255);"> Durée </span>',
+									name : 'dure',
+								}
+								
+								],//items
+								buttons : [ {
+									text : 'Envoyer la demande',
+									 handler: function() {
+										 var form = this.up('form').getForm();
+							                form.submit({
+							                	url: [[@{/add}]],
+							                	params : {
+							                		"userId":1,
+							                	},
+							                	success: function(fp, o) {
+							                		
+							                			 window.location = Ext.decode(o.response.responseText).msg;
+							                	},
+							                	failure: function(fp, o) {
+							                		Ext.Msg.alert('Failure', 'erreur');
+												} 
+							                })
+							            }
+								},
+								]//buttons
+							});
+							
+						    /* 	
+							 main Panle
+							*/
+							var formPanel = Ext.create('Ext.form.Panel', {
+								xtype : 'panel',
+								title : 'Confirmation de l\'opération',
+								height : 600,
+								width : '100%',
+								bodyStyle: 'background-color: #D2D7D3;',
+								layout : {
+									type : 'hbox',
+									align : 'middle',
+									pack : 'center'
+								},
+								items : [ {
+									xtype : auth
+								} ]
+
+							});
+
+
+						formPanel.render('test');
+
+					});
+
+			/*]]>*/
+		</script>
+
+
+
+		<div id="test" />
+		
+	
+
+	</div>
+
+</body>
+</html>

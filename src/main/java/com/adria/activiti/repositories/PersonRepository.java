@@ -1,8 +1,10 @@
-package com.adria.activiti;
+package com.adria.activiti.repositories;
 
  
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.adria.activiti.entities.Person;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
