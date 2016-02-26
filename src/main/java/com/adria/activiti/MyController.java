@@ -107,7 +107,17 @@ public class MyController {
 //			TaskDTO dto=new TaskDTO();
 //			System.out.println(task.getName());
 //		}
-    	return myService.getTasks("2");
+    	return myService.getTasks("2");//STATIC
+    }
+    @RequestMapping(value="/accepte", method= RequestMethod.POST)
+    public @ResponseBody String  accepte(@RequestParam("id")String id) {
+    	
+    	myService.accepte(id);
+    	
+    	GenericResponse response=new GenericResponse();
+    	response.setSuccess(true);
+    	Gson gson=new Gson();
+    	return gson.toJson(response);
     }
 
     

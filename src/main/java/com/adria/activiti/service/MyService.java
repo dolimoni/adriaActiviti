@@ -48,22 +48,23 @@ public class MyService {
     public List<TaskDTO> getTasks(String assignee) {
     	List<TaskDTO> dtos=new ArrayList<TaskDTO>();
     	List<Task> tasks=taskService.createTaskQuery().taskAssignee(assignee).list();
+    	
     	for (Task task : tasks) {
     		String dure=runtimeService.getVariables(task.getProcessInstanceId()).get("dure").toString();
-    		System.out.println(runtimeService.getVariables(task.getProcessInstanceId()));
     		String firstName=runtimeService.getVariables(task.getProcessInstanceId()).get("firstName").toString();
-    		dtos.add(new TaskDTO(dure,firstName ));
+    		String id =task.getId();
+    		dtos.add(new TaskDTO(dure,firstName,id));
 		}
     	
         return dtos;
     }
 
-    public void createDemoUsers() {
-        if (personRepository.findAll().size() == 0) {
-            personRepository.save(new Person("jbarrez", "Joram", "Barrez", new Date()));
-            personRepository.save(new Person("trademakers", "Tijs", "Rademakers", new Date()));
-        }
-    }
+//    public void createDemoUsers() {
+//        if (personRepository.findAll().size() == 0) {
+//            personRepository.save(new Person("jbarrez", "Joram", "Barrez", new Date()));
+//            personRepository.save(new Person("trademakers", "Tijs", "Rademakers", new Date()));
+//        }
+//    }
 
 	public void createDemande(DemandesDTO demandeDTO) {
 		
@@ -78,8 +79,38 @@ public class MyService {
         variables.put("id_superior", person.getSuperior().getId_superior());
         variables.put("dure", demandeDTO.getDure());
         variables.put("firstName", person.getFirstName());
+        variables.put("id_demande", demande.getId());
         runtimeService.startProcessInstanceByKey("oneTaskProcess", variables);
        
+	}
+	
+	public void accepte(String id){
+		
+        
+        Task task=taskService.createTaskQuery().taskId(id).singleResult();
+        String processInstanceId=task.getProcessInstanceId(); 
+        System.out.println(task+" task info");
+        System.out.println(runtimeService.getVariables(processInstanceId));
+        Demande demande = demandeRepo.findOne(new Long(runtimeService.getVariables(processInstanceId).get("id_demande").toString()));//STATIC
+        System.out.println(demande);
+        demande.setStatus("accepted");
+        demandeRepo.saveAndFlush(demande);
+        
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put("accepted", true);
+        System.out.println("completer la tache "+processInstanceId);
+        taskService.complete(task.getId(), variables);
+       
+        //        taskService.complete(id, variables);
+//        Task task=taskService.createTaskQuery().taskId(id).singleResult();
+//        System.out.println(runtimeService.getVariables(task.getProcessInstanceId()));
+//        Demande demande = demandeRepo.findOne(new Long(runtimeService.getVariables(task.getProcessInstanceId()).get("id_demande").toString()));
+
+	}
+	public void refuse(){
+		Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put("accepted", false);
+        taskService.complete("14", variables);
 	}
 	
 	public List<Demande> getPersonDemandes(Person person){

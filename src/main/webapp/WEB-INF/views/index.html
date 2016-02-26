@@ -64,7 +64,7 @@
 						
 						var formPanel = Ext.create('Ext.form.Panel', {
 							xtype : 'panel',
-							title : 'Mes demandes',
+							border:false,
 							height : 50,
 							width : '100%',
 							layout:'anchor',
@@ -85,8 +85,9 @@
 
 						});
 
-						formPanel.render('test');
 						demandesGrid.render('grid');
+						formPanel.render('test');
+						
 
 					});
 
@@ -94,11 +95,10 @@
 		</script>
 
 
-
-		<div id="test" />
 		
+		<DIV id="grid" align="center"></DIV>
+		<div id="test" align="center" />
 		
-		<DIV id="grid"></DIV>
 
 	</div>
 

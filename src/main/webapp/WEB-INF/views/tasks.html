@@ -24,21 +24,22 @@
 						
 						
 						
-						var TasksGrid = Ext.create('Ext.grid.Panel',{
+						/* var TasksGrid = Ext.create('Ext.grid.Panel',{
 							title:'mes taches',
 						    //store:demandesStore,
 							columns:
 								[
+								 	{text:'id',dataIndex:'id'}
 								 	{text:'Demandeur',dataIndex:'firstName'},
 								 	{text:'Durée',dataIndex:'dure'},
 								 	{text:'Accepter',dataIndex:'accepte'},
 								 	{text:'Refuser',dataIndex:'deny'},
 								],//columns 
-						});
+						}); */
 						
 						var TasksStore = Ext.create('Ext.data.Store', {
-						    storeId:'Mes deamndes de congé',
-						    fields:['firstName', 'dure'],
+						    storeId:'myTasks',
+						    fields:['id','firstName', 'dure'],
 						    autoLoad:true,
 						    proxy: {
 						        type: 'ajax',
@@ -51,12 +52,49 @@
 						});
 
 						var tasksGrid=Ext.create('Ext.grid.Panel', {
-						    title: 'Informations',
+						    title: 'Les demandes de congé',
 						    store: TasksStore,
 						    columns: [
+						        {text:'id',dataIndex:'id'},
 						        { text: 'Date de création',  dataIndex: 'firstName', flex: 1 },
 						        { text: 'Durée', dataIndex: 'dure', flex: 1 },
-						    ],
+						        {
+						            xtype:'actioncolumn',
+						            text:'Accepter',
+						            width:50,
+						            items: [{
+						                icon: 'resources/images/accepte.png',
+						                tooltip: 'Accepter',
+						                handler: function(grid, rowIndex, colIndex) {
+						                	var rec=grid.getStore().getAt(rowIndex);
+						                	
+						                	 Ext.Ajax.request({ 
+							     					url : [[@{/accepte}]],
+							     				    method: 'POST',
+							     				    params : { "id" : rec.get('id')},
+							     				     success: function(response){
+							     				    	grid.getStore().removeAt(rowIndex);
+							     				    }, 
+							     				   failure: function(response){
+							     				        alert("erreur");
+							     				    }
+							     				});
+						                }
+						            }]
+						        },
+						        {
+						            xtype:'actioncolumn',
+						            text:'Refuser',
+						            width:50,
+						            items: [{
+						                icon: 'resources/images/delete.png',
+						                tooltip: 'Refuser',
+						                handler: function(grid, rowIndex, colIndex) {
+						                    alert("go");
+						                }
+						            }]
+						        }
+						    ],//columns
 						    height: 200,
 						    width: 600,
 						    
@@ -85,7 +123,7 @@
 
 						});
 
-						formPanel.render('test');
+						//formPanel.render('test');
 						tasksGrid.render('grid');
 
 					});
@@ -98,7 +136,7 @@
 		<div id="test" />
 		
 		
-		<DIV id="grid"></DIV>
+		<DIV id="grid" align="center"></DIV>
 
 	</div>
 
