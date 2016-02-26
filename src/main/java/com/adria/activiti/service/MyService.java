@@ -1,5 +1,6 @@
 package com.adria.activiti.service;
  
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.adria.activiti.DTO.DemandesDTO;
+import com.adria.activiti.DTO.TaskDTO;
 import com.adria.activiti.entities.Demande;
 import com.adria.activiti.entities.Person;
 import com.adria.activiti.repositories.DemandeRepo;
@@ -34,15 +36,26 @@ public class MyService {
 
     public void startProcess(String assignee) {
 
-        Person person = personRepository.findOne(new Long("assignee"));
+        Person superier = personRepository.findOne(new Long("assignee"));
+        Person person = personRepository.findOne(new Long(2));
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("id", person.getId_person());
+        variables.put("id", superier.getId_person());
+        variables.put("firstName", person.getFirstName());
         runtimeService.startProcessInstanceByKey("oneTaskProcess", variables);
     }
 
-    public List<Task> getTasks(String assignee) {
-        return taskService.createTaskQuery().taskAssignee(assignee).list();
+    public List<TaskDTO> getTasks(String assignee) {
+    	List<TaskDTO> dtos=new ArrayList<TaskDTO>();
+    	List<Task> tasks=taskService.createTaskQuery().taskAssignee(assignee).list();
+    	for (Task task : tasks) {
+    		String dure=runtimeService.getVariables(task.getProcessInstanceId()).get("dure").toString();
+    		System.out.println(runtimeService.getVariables(task.getProcessInstanceId()));
+    		String firstName=runtimeService.getVariables(task.getProcessInstanceId()).get("firstName").toString();
+    		dtos.add(new TaskDTO(dure,firstName ));
+		}
+    	
+        return dtos;
     }
 
     public void createDemoUsers() {
@@ -62,8 +75,11 @@ public class MyService {
 		demande.setPerson(person);
 		demandeRepo.saveAndFlush(demande);
 		Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("id_superior", person.getId_person());
+        variables.put("id_superior", person.getSuperior().getId_superior());
+        variables.put("dure", demandeDTO.getDure());
+        variables.put("firstName", person.getFirstName());
         runtimeService.startProcessInstanceByKey("oneTaskProcess", variables);
+       
 	}
 	
 	public List<Demande> getPersonDemandes(Person person){

@@ -40,15 +40,15 @@ public class MyController {
         myService.startProcess(startProcessRepresentation.getAssignee());
     }
 
-    @RequestMapping(value="/taskss", method= RequestMethod.GET)
-    public List<TaskRepresentation> getTasks(@RequestParam String assignee) {
-        List<Task> tasks = myService.getTasks(assignee);
-        List<TaskRepresentation> dtos = new ArrayList<TaskRepresentation>();
-        for (Task task : tasks) {
-            dtos.add(new TaskRepresentation(task.getId(), task.getName()));
-        }
-        return dtos;
-    }
+//    @RequestMapping(value="/taskss", method= RequestMethod.GET)
+//    public List<TaskRepresentation> getTasks(@RequestParam String assignee) {
+//        List<Task> tasks = myService.getTasks(assignee);
+//        List<TaskRepresentation> dtos = new ArrayList<TaskRepresentation>();
+//        for (Task task : tasks) {
+//            dtos.add(new TaskRepresentation(task.getId(), task.getName()));
+//        }
+//        return dtos;
+//    }
     
 //    					Demandes de congé
     
@@ -77,7 +77,8 @@ public class MyController {
     public @ResponseBody List<DemandesDTO> getPersonDemandes(HttpServletRequest request){
     	List<DemandesDTO> demandesDTOs=new ArrayList<DemandesDTO>();
     	
-    	Person person=myService.findPersonById(new Long(1));// STATIC
+    	Person person=myService.findPersonById(new Long(2));// STATIC
+    	
     	List<Demande> demandes=myService.getPersonDemandes(person);
     	
     	for (Demande demande : demandes) {
@@ -100,13 +101,13 @@ public class MyController {
     
     @RequestMapping(value="/getMyTasks",method=RequestMethod.GET)
     public @ResponseBody List<TaskDTO> getMyTasks(HttpServletRequest request){
-    	List<TaskDTO> taskDTOs=new ArrayList<TaskDTO>();
-    	List<Task> tasks=myService.getTasks("1");
-    	for (Task task : tasks) {
-			TaskDTO dto=new TaskDTO();
-			System.out.println(task.getParentTaskId());
-		}
-    	return null;
+//    	List<TaskDTO> taskDTOs=new ArrayList<TaskDTO>();
+//    	List<TaskDTO> tasks=myService.getTasks("2");
+//    	for (Task task : tasks) {
+//			TaskDTO dto=new TaskDTO();
+//			System.out.println(task.getName());
+//		}
+    	return myService.getTasks("2");
     }
 
     
