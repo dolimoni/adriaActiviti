@@ -98,6 +98,10 @@ public class MyController {
     public String getTasks(HttpServletRequest request) {
     	return "tasks";
     }
+    @RequestMapping(value="/getMangerTasks", method= RequestMethod.GET)
+    public String getMangerTasks(HttpServletRequest request) {
+    	return "manager";
+    }
     
     @RequestMapping(value="/getMyTasks",method=RequestMethod.GET)
     public @ResponseBody List<TaskDTO> getMyTasks(HttpServletRequest request){
@@ -108,6 +112,11 @@ public class MyController {
 //			System.out.println(task.getName());
 //		}
     	return myService.getTasks("2");//STATIC
+    }
+    @RequestMapping(value="/getManagerTasks",method=RequestMethod.GET)
+    public @ResponseBody List<TaskDTO> getManagerTasks(HttpServletRequest request){
+
+    	return myService.getManagerTasks("3");//STATIC
     }
     @RequestMapping(value="/accepte", method= RequestMethod.POST)
     public @ResponseBody String  accepte(@RequestParam("id")String id) {

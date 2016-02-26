@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Home page</title>
+<!-- Extjs import -->
+<link rel="stylesheet" type="text/css"
+	href="resources/extjs/ext-all.css" />
+<script type="text/javascript" src="resources/extjs/ext-all.js"></script>
+<!-- Our script -->
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+
+			Ext.onReady(function() {
+						Ext.QuickTips.init();
+
+						
+						
+						
+						/* var TasksGrid = Ext.create('Ext.grid.Panel',{
+							title:'mes taches',
+						    //store:demandesStore,
+							columns:
+								[
+								 	{text:'id',dataIndex:'id'}
+								 	{text:'Demandeur',dataIndex:'firstName'},
+								 	{text:'Durée',dataIndex:'dure'},
+								 	{text:'Accepter',dataIndex:'accepte'},
+								 	{text:'Refuser',dataIndex:'deny'},
+								],//columns 
+						}); */
+						
+						var TasksStore = Ext.create('Ext.data.Store', {
+						    storeId:'myTasks',
+						    fields:['id','firstName', 'dure'],
+						    autoLoad:true,
+						    proxy: {
+						        type: 'ajax',
+						        url:  [[@{/getManagerTasks}]],
+						        reader: {
+						            type: 'json',
+						            root: 'root',
+						        }
+						    }, //proxy
+						});
+
+						var tasksGrid=Ext.create('Ext.grid.Panel', {
+						    title: 'Les demandes de congé',
+						    store: TasksStore,
+						    columns: [
+						        {text:'id',dataIndex:'id'},
+						        { text: 'Date de création',  dataIndex: 'firstName', flex: 1 },
+						        { text: 'Durée', dataIndex: 'dure', flex: 1 },
+						        {
+						            xtype:'actioncolumn',
+						            text:'Accepter',
+						            width:50,
+						            items: [{
+						                icon: 'resources/images/accepte.png',
+						                tooltip: 'Accepter',
+						                handler: function(grid, rowIndex, colIndex) {
+						                	var rec=grid.getStore().getAt(rowIndex);
+						                	
+						                	 Ext.Ajax.request({ 
+							     					url : [[@{/accepte}]],
+							     				    method: 'POST',
+							     				    params : { "id" : rec.get('id')},
+							     				     success: function(response){
+							     				    	grid.getStore().removeAt(rowIndex);
+							     				    	 Ext.Msg.alert('Success','Vous avez accepté cette demande');
+							     				    }, 
+							     				   failure: function(response){
+							     					  Ext.Msg.alert('Warning','erreur!');
+							     				    }
+							     				});
+						                }
+						            }]
+						        },
+						        {
+						            xtype:'actioncolumn',
+						            text:'Refuser',
+						            width:50,
+						            items: [{
+						                icon: 'resources/images/delete.png',
+						                tooltip: 'Refuser',
+						                handler: function(grid, rowIndex, colIndex) {
+						                	var rec=grid.getStore().getAt(rowIndex);
+						                	
+						                	 Ext.Ajax.request({ 
+							     					url : [[@{/refuse}]],
+							     				    method: 'POST',
+							     				    params : { "id" : rec.get('id')},
+							     				     success: function(response){
+							     				    	grid.getStore().removeAt(rowIndex);
+							     				    	 Ext.Msg.alert('Success','Vous avez refusé cette demande!');
+							     				    }, 
+							     				   failure: function(response){
+							     					  Ext.Msg.alert('Warning','erreur!');
+							     				    }
+							     				});
+						                }
+						            }]
+						        }
+						    ],//columns
+						    height: 200,
+						    width: 600,
+						    
+						});
+						
+						var formPanel = Ext.create('Ext.form.Panel', {
+							xtype : 'panel',
+							title : 'Mes tâches',
+							height : 50,
+							width : '100%',
+							layout:'anchor',
+								items : [ 
+						        {
+								xtype : 'button',
+								text:'Ajouter une demande',
+								anchor: '10% 100%',
+								handler: function() {
+									window.location= [[@{/create}]]
+						            }
+								},
+						     	/* {
+									xtype:'demandesGrid',
+									anchor:'50% 50%'
+						     	} */
+						     ]//items
+
+						});
+						var formPanel = Ext.create('Ext.form.Panel', {
+							xtype : 'panel',
+							
+							height : 200,
+							margin:'20 0 0 0',
+							border:false,
+							width : '100%',
+							layout : {
+								type : 'hbox',
+								align : 'middle',
+								pack : 'center'
+							},
+							items : [ {
+								xtype : tasksGrid,
+							} ]
+
+						});
+
+						
+						formPanel.render('grid');
+
+					});
+
+			/*]]>*/
+		</script>
+
+
+
+		<H1 align="center">Liste des demandes de congé reçu</H1>
+		
+		
+		<DIV id="grid" align="center"></DIV>
+
+	</div>
+
+</body>
+</html>

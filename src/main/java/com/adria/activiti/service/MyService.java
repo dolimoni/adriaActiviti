@@ -58,6 +58,20 @@ public class MyService {
     	
         return dtos;
     }
+    
+    public List<TaskDTO> getManagerTasks(String assignee) {
+    	List<TaskDTO> dtos=new ArrayList<TaskDTO>();
+    	List<Task> tasks=taskService.createTaskQuery().taskAssignee(assignee).list();
+    	System.out.println(tasks.size());
+    	for (Task task : tasks) {
+    		String dure=runtimeService.getVariables(task.getProcessInstanceId()).get("dure").toString();
+    		String firstName=runtimeService.getVariables(task.getProcessInstanceId()).get("firstName").toString();
+    		String id =task.getId();
+    		dtos.add(new TaskDTO(dure,firstName,id));
+		}
+    	
+        return dtos;
+    }
 
 //    public void createDemoUsers() {
 //        if (personRepository.findAll().size() == 0) {
@@ -80,6 +94,7 @@ public class MyService {
         variables.put("dure", demandeDTO.getDure());
         variables.put("firstName", person.getFirstName());
         variables.put("id_demande", demande.getId());
+        variables.put("id_person", person.getId_person());
         runtimeService.startProcessInstanceByKey("oneTaskProcess", variables);
        
 	}
@@ -117,9 +132,9 @@ public class MyService {
         Demande demande = demandeRepo.findOne(new Long(runtimeService.getVariables(processInstanceId).get("id_demande").toString()));//STATIC
         demande.setStatus("refused");
         demandeRepo.saveAndFlush(demande);
-        
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("accepted", false);
+        variables.put("id_superior", new Long(runtimeService.getVariables(processInstanceId).get("id_superior").toString()));
         taskService.complete(task.getId(), variables);
 		
 	}
