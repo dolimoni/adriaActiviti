@@ -24,16 +24,7 @@
 						
 						
 						
-						var demandesGrid = Ext.create('Ext.grid.Panel',{
-							title:'mes demandes de congé',
-						    //store:demandesStore,
-							columns:
-								[
-								 	{text:'Date de création',dataIndex:'creationDate'},
-								 	{text:'Durée',dataIndex:'dure'},
-								 	{text:'Status',dataIndex:'status'},
-								],//columns 
-						});
+						/* Stores */
 						
 						var demandesStore = Ext.create('Ext.data.Store', {
 						    storeId:'Mes deamndes de congé',
@@ -48,13 +39,16 @@
 						        }
 						    }, //proxy
 						});
-
+						
+						
+						/* Grid */
 						var demandesGrid=Ext.create('Ext.grid.Panel', {
 						    title: 'Informations',
 						    store: demandesStore,
+						    margin:'80 0 20 0',
 						    columns: [
 						        { text: 'Date de création',  dataIndex: 'creationDate', flex: 1 },
-						        { text: 'Durée', dataIndex: 'dure', flex: 1 },
+						        { text: 'Durée (jour)', dataIndex: 'dure', flex: 1 },
 						        { text: 'Status', dataIndex: 'status', flex: 1 }
 						    ],
 						    height: 200,
@@ -77,10 +71,6 @@
 									window.location= [[@{/create}]]
 						            }
 								},
-						     	/* {
-									xtype:'demandesGrid',
-									anchor:'50% 50%'
-						     	} */
 						     ]//items
 
 						});

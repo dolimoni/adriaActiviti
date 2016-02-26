@@ -74,9 +74,10 @@
 							     				    params : { "id" : rec.get('id')},
 							     				     success: function(response){
 							     				    	grid.getStore().removeAt(rowIndex);
+							     				    	 Ext.Msg.alert('Success','Vous avez accepté cette demande');
 							     				    }, 
 							     				   failure: function(response){
-							     				        alert("erreur");
+							     					  Ext.Msg.alert('Warning','erreur!');
 							     				    }
 							     				});
 						                }
@@ -90,7 +91,20 @@
 						                icon: 'resources/images/delete.png',
 						                tooltip: 'Refuser',
 						                handler: function(grid, rowIndex, colIndex) {
-						                    alert("go");
+						                	var rec=grid.getStore().getAt(rowIndex);
+						                	
+						                	 Ext.Ajax.request({ 
+							     					url : [[@{/refuse}]],
+							     				    method: 'POST',
+							     				    params : { "id" : rec.get('id')},
+							     				     success: function(response){
+							     				    	grid.getStore().removeAt(rowIndex);
+							     				    	 Ext.Msg.alert('Success','Vous avez refusé cette demande!');
+							     				    }, 
+							     				   failure: function(response){
+							     					  Ext.Msg.alert('Warning','erreur!');
+							     				    }
+							     				});
 						                }
 						            }]
 						        }
@@ -122,9 +136,26 @@
 						     ]//items
 
 						});
+						var formPanel = Ext.create('Ext.form.Panel', {
+							xtype : 'panel',
+							
+							height : 200,
+							margin:'20 0 0 0',
+							border:false,
+							width : '100%',
+							layout : {
+								type : 'hbox',
+								align : 'middle',
+								pack : 'center'
+							},
+							items : [ {
+								xtype : tasksGrid,
+							} ]
 
-						//formPanel.render('test');
-						tasksGrid.render('grid');
+						});
+
+						
+						formPanel.render('grid');
 
 					});
 
@@ -133,7 +164,7 @@
 
 
 
-		<div id="test" />
+		<H1 align="center">Liste des demandes de congé reçu</H1>
 		
 		
 		<DIV id="grid" align="center"></DIV>

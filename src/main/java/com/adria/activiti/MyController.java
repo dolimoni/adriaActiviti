@@ -119,6 +119,17 @@ public class MyController {
     	Gson gson=new Gson();
     	return gson.toJson(response);
     }
+    
+    @RequestMapping(value="/refuse", method= RequestMethod.POST)
+    public @ResponseBody String  refuse(@RequestParam("id")String id) {
+    	
+    	myService.refuse(id);
+    	
+    	GenericResponse response=new GenericResponse();
+    	response.setSuccess(true);
+    	Gson gson=new Gson();
+    	return gson.toJson(response);
+    }
 
     
     static class TaskRepresentation {

@@ -89,28 +89,17 @@ public class MyService {
         
         Task task=taskService.createTaskQuery().taskId(id).singleResult();
         String processInstanceId=task.getProcessInstanceId(); 
-        System.out.println(task+" task info");
-        System.out.println(runtimeService.getVariables(processInstanceId));
+       
         Demande demande = demandeRepo.findOne(new Long(runtimeService.getVariables(processInstanceId).get("id_demande").toString()));//STATIC
-        System.out.println(demande);
         demande.setStatus("accepted");
         demandeRepo.saveAndFlush(demande);
         
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("accepted", true);
-        System.out.println("completer la tache "+processInstanceId);
         taskService.complete(task.getId(), variables);
        
-        //        taskService.complete(id, variables);
-//        Task task=taskService.createTaskQuery().taskId(id).singleResult();
-//        System.out.println(runtimeService.getVariables(task.getProcessInstanceId()));
-//        Demande demande = demandeRepo.findOne(new Long(runtimeService.getVariables(task.getProcessInstanceId()).get("id_demande").toString()));
+     
 
-	}
-	public void refuse(){
-		Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("accepted", false);
-        taskService.complete("14", variables);
 	}
 	
 	public List<Demande> getPersonDemandes(Person person){
@@ -119,6 +108,20 @@ public class MyService {
 	
 	public Person findPersonById(Long id){
 		return personRepository.findOne(id);
+	}
+
+	public void refuse(String id) {
+		Task task=taskService.createTaskQuery().taskId(id).singleResult();
+        String processInstanceId=task.getProcessInstanceId(); 
+       
+        Demande demande = demandeRepo.findOne(new Long(runtimeService.getVariables(processInstanceId).get("id_demande").toString()));//STATIC
+        demande.setStatus("refused");
+        demandeRepo.saveAndFlush(demande);
+        
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put("accepted", false);
+        taskService.complete(task.getId(), variables);
+		
 	}
 
 }

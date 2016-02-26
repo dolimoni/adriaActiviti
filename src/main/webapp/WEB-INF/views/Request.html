@@ -60,9 +60,14 @@
 									 
 								},	          
 								          {
-									fieldLabel : '<span style="color: rgb(255, 255, 255);"> Durée </span>',
+									fieldLabel : '<span style="color: black;"> Durée </span>',
 									name : 'dure',
-								}
+								},
+								{
+									fieldLabel : '<span style="color: black;"> Motif </span>',
+									name : 'motif',
+								},
+								
 								
 								],//items
 								buttons : [ {
@@ -92,9 +97,10 @@
 							*/
 							var formPanel = Ext.create('Ext.form.Panel', {
 								xtype : 'panel',
-								title : 'Confirmation de l\'opération',
-								height : 600,
+								title : 'Informations',
+								height : 200,
 								width : '100%',
+								margin :'100 0 0 0',
 								bodyStyle: 'background-color: #D2D7D3;',
 								layout : {
 									type : 'hbox',
